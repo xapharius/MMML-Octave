@@ -1,4 +1,4 @@
 MMML-Octave
 ===========
 
-Machine Learning Algorithms in Octave with the focus on Neural Networks
+Machine Learning Algorithms in Octave with a focus on Neural Networks
