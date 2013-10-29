@@ -1,2 +1,0 @@
-function ret = createNN(_parameterList)
-end
