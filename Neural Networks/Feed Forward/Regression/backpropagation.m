@@ -27,11 +27,7 @@ function ret = backpropagation(_NN, _activations, _target, _learningRate = 0.5)
     NN = _NN;    
     for i = 1:length(NN)
         deltaW = _learningRate * (delta{i}' * _activations{i});
-	mask = sign(deltaW);
-	deltaW = mask .* log(abs(deltaW));
-        NN{i} = _NN{i} + log(deltaW)
     end  
-    
     
     ret = NN;
 end
