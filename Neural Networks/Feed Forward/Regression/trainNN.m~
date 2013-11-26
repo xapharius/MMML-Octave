@@ -1,7 +1,7 @@
 # returns trained NN
 #
 #	@param _NN	neural network created via createNN
-#   	@param _filePath 
+#   @param _filePath 
 #	@param _nrInput	number of input variables (columns) in data file 
 #	@param _plotConvergance	plots the convergance in each iteration over the training data
 
