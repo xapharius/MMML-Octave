@@ -2,6 +2,9 @@
 # @return	cell-list of outputs for each neuron
 
 function ret = feedForward(_NN, _input)
+    #load sigmoid function and its derivative     
+    source("../../Commons/sigmoid.m")
+
     #{
     if size(_NN{1})(1) != length(_input) + 1
         error("wrong input dimension");
@@ -20,20 +23,25 @@ function ret = feedForward(_NN, _input)
     previousLayerOutput = inputVector;
     
 #	iteration over layers    
-    for i = 1:length(_NN)     
+    for i = 1:length(_NN)-1     
         Z = _NN{i} * previousLayerOutput';
         
-#		activation function
-#	sigmoid(Z')
-        previousLayerOutput = Z';
+#	    activation function
+        previousLayerOutput = sigmoid(Z');
         
-#		add bias input for every HIDDEN layer, do not add bias for output layer     
-        if i < length(_NN)
-            previousLayerOutput = [previousLayerOutput, 1];
-        end
-#		insert layer outputs in activations
+#	    add bias input for every HIDDEN layer, do not add bias for output layer     
+        previousLayerOutput = [previousLayerOutput, 1];
+#	    insert layer outputs in activations
         activations{i+1} = previousLayerOutput;  
     end
+	
+#	Last layer has linear output
+    i = length(_NN);
+    Z = _NN{i} * previousLayerOutput';
+    previousLayerOutput = Z';
+    activations{i+1} = previousLayerOutput;
+
+
     ret = activations;
 end
 
