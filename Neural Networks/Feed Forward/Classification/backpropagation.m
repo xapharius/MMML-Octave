@@ -31,9 +31,6 @@ function ret = backpropagation(_NN, _activations, _target, _learningRate = 0.5)
         deltaW = _learningRate * (delta{i}' * _activations{i});
         NN{i} = _NN{i} + deltaW;
     end  
-    
-    
+     
     ret = NN;
 end
-
-
