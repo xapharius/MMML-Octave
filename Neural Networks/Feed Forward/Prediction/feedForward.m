@@ -4,44 +4,32 @@
 function ret = feedForward(_NN, _input)
     #load sigmoid function and its derivative     
     source("../../Commons/sigmoid.m")
-
-    #{
-    if size(_NN{1})(1) != length(_input) + 1
-        error("wrong input dimension");
-    end
-    #}
-    
+   
 #	Matrizen der Reihe nach multiplizieren mit den inputvector.
-#	Das Produkt wird zum neuen inputvector.    
-    inputVector = _input;
-#	add one for bias
-    inputVector = [inputVector,1];
-#	input in first place
-    activations{1} = inputVector; 
+#	Das Produkt wird zum neuen inputvector für die nächsten Layers.    
     
-#	init multiplication with input vector
-    previousLayerOutput = inputVector;
+#   add to activations, without bias unit
+    activations{1} = _input;
+#	add one for bias
+    currActivations = [_input, 1];
+     
     
 #	iteration over layers    
-    for i = 1:length(_NN)-1     
-        Z = _NN{i} * previousLayerOutput';
+    for i = 1:length(_NN)     
+#       [1, nrNeurons_in] * [nrNeurons_in, nrNeurons_out]
+        currActivations = currActivations * _NN{i};
         
-#	    activation function
-        previousLayerOutput = sigmoid(Z');
-        
-#	    add bias input for every HIDDEN layer, do not add bias for output layer     
-        previousLayerOutput = [previousLayerOutput, 1];
+#	    activation function, if not last Layer
+        if i != length(_NN)
+            currActivations = sigmoid(currActivations);
+        end
 #	    insert layer outputs in activations
-        activations{i+1} = previousLayerOutput;  
+        activations{i+1} = currActivations;  
+        
+#	    add bias unit    
+        currActivations = [currActivations, 1];
+
     end
-	
-#	Last layer has linear output
-    i = length(_NN);
-    Z = _NN{i} * previousLayerOutput';
-    previousLayerOutput = Z';
-    activations{i+1} = previousLayerOutput;
-
-
     ret = activations;
 end
 

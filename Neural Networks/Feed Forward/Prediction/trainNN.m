@@ -5,7 +5,7 @@
 #	@param _nrInput	number of input variables (columns) in data file 
 #	@param _plotConvergance	plots the convergance in each iteration over the training data
 
-function ret = trainNN(_NN, _filePath, _nrInput, _plotConvergence = false)
+function ret = trainNN(_NN, _filePath = "../../../Datasets/Test/Regression/trainingData", _nrInput = 1, _plotConvergence = false)
 #	fetch data and split it
     dataRaw = dlmread(_filePath, ",");
     inputData = dataRaw(:, 1:_nrInput);

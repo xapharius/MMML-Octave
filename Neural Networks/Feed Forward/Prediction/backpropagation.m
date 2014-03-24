@@ -5,6 +5,9 @@
 # @param _learningRate	optional learning rate
 # @return				NN with updated weights
 
+# deltaRule{i}:    row vector
+# activations{i}:  row vector 
+
 
 function ret = backpropagation(_NN, _activations, _target, _learningRate = 0.5)
 #	load sigmoid function and its derivative     
@@ -13,23 +16,27 @@ function ret = backpropagation(_NN, _activations, _target, _learningRate = 0.5)
 #	Using "delta rule" for backprop - http://de.wikipedia.org/wiki/Backpropagation
 
 #	Compute output layer Deltas    
-    delta{length(_NN)} = (_target .- _activations{length(_activations)});
-    
-#	Bottom-Up through all layers (from output to input neuron)  
-    for i = length(_NN)-1:-1:1
+    deltaRule = {(_target .- _activations{end})};
+#	Go Backwards thorugh layers (from output to imput)
+    for i = length(_NN):-1:2 # dont need deltas for input layer!!!!!!
+#       Deltas are always prepended, so deltaRule{1} is always the last inserted element
 #		Sum deltas * the weights - The sum is important if weight influences multiple parent neurons
-        S = delta{i + 1} * _NN{i+1};
-#		For each delta in new layer multiply with derivative - check formula
-        delta{i} = sigmoidDerivative(_activations{i+1}) .* S;
-#		Don't need the delta for the bias neuron -> remove the last delta
-        delta{i} = delta{i}(1:length(delta{i})-1);
-    end
+        sums = _NN{i} * deltaRule{1}';
+#       remove bias activations since there are no weights from the previous layer to it
+        sums = sums(1:end-1, :)';
 
+#		For each delta in new layer multiply with derivative
+        deltaRule_thisLayer = sigmoidDerivative(_activations{i}) .* sums;
+        
+#       Prepend delta 
+        deltaRule = {deltaRule_thisLayer, deltaRule{:}};
+    end
 # 	Update Weights - using the learning rate
     NN = _NN;    
     for i = 1:length(NN)
-        deltaW = _learningRate * (delta{i}' * _activations{i});
-        NN{i} = _NN{i} + deltaW;
+#       Activations need the bias value here
+        weightsChange = _learningRate .* ([_activations{i},1]' * deltaRule{i});
+        NN{i} = _NN{i} + weightsChange;
     end  
      
     ret = NN;
