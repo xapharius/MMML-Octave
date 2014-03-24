@@ -36,11 +36,10 @@ function ret = trainNN(_NN, _filePath = "../../../Datasets/Test/Regression/train
 	        hold off;
 	        drawnow; 
 	        pause(0.0001);
-	        
-
+	       
+            #progress in percent
+            progress = i*100/size(inputData)(1) 
         end
-        #progress in percent
-        progress = i*100/size(inputData)(1)
     end
     ret = NN;
 end
